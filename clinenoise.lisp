@@ -12,7 +12,10 @@
 (defparameter *mlmode* nil)
 (defparameter *history-len* +linenoise-default-history-max-len+)
 (defparameter *history* nil)
-(defparameter *completion-callback* (lambda (x) (declare (ignore x)) nil))
+(defparameter *completion-callback* (lambda (x) (declare (ignore x)) nil)
+  "Function to call for completions.
+  Takes the current line as a parameter, and returns a list of possible completions
+  Does not currently indicate the position of the cursor when the completion was requested")
 
 (defstruct (linenoise-state (:conc-name ls-))
   fd
@@ -368,6 +371,9 @@
 	(edit 0 prompt plen))))
 
 (defun linenoise (prompt &optional (plen (length prompt)))
+  "Display PROMPT and wait for a line to be entered with basic editing support
+  PLEN can be specified for prompts that have a display width different from
+  their character count (e.g. combining characters, escape codes)"
   (cond
     ((is-unsupported-term)
      (format *standard-output* "~A" prompt)
@@ -378,17 +384,20 @@
      (linenoise-raw prompt plen))))
 
 (defun history-add (line)
+  "Add LINE to the prompt history"
   (push line *history*)
   (when (> (length *history*) *history-len* )
     (setf *history* (subseq *history* 0 *history-len*))))
 
 (defun history-save (fn)
+  "Save history to pathname FN"
   (with-open-file (s fn :if-exists :supersede
 		     :if-does-not-exist :create
 		     :direction :output)
     (format fn "~{~A~%~}" *history*)))
 
 (defun history-load (fn)
+  "Load history from pathname FN"
   (ignore-errors
     (with-open-file (s fn)
       (setf *history*

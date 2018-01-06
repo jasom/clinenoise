@@ -1,9 +1,9 @@
 ;;;; clinenoise.asd
 (asdf:defsystem #:clinenoise
   :serial t
-  :description "Describe clinenoise here"
-  :author "Your Name <your.name@example.com>"
-  :license "Specify license here"
+  :description "A trivial line-input library for VT-like terminals"
+  :author "Jason Miller <aidenn0@geocities.com"
+  :license "BSD-2"
   :defsystem-depends-on ("cffi-grovel")
   :depends-on (#:cffi
                #:alexandria
