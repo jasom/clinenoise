@@ -394,7 +394,7 @@
   (with-open-file (s fn :if-exists :supersede
 		     :if-does-not-exist :create
 		     :direction :output)
-    (format fn "~{~A~%~}" *history*)))
+    (format s "~{~A~%~}" *history*)))
 
 (defun history-load (fn)
   "Load history from pathname FN"
